@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+
+# Env
+.env
+
+# Session WhatsApp (données sensibles !)
+auth/
+!auth/.gitkeep
+
+# Données persistantes
+data/*.json
+!data/.gitkeep
+
+# Logs
+*.log
+logs/
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Temp media
+tmp/
+temp/
+*.tmp
+
+# Artefacts de test
+test/.tmp-*
