@@ -1,6 +1,11 @@
 import { config } from '../../config.js';
 import { numberToJid } from '../../utils/helpers.js';
 
+// WhatsApp affiche mal les caractères non-ASCII (ex. Λ) dans les champs FN/displayName
+// des messages de type "contacts" (vCard) — contrairement aux messages texte classiques,
+// où "H$Λ BOT" s'affiche correctement. On utilise donc un nom ASCII sûr uniquement ici.
+const SAFE_BRAND = 'HSA BOT';
+
 export default {
   name: 'owner',
   aliases: [],
@@ -14,11 +19,11 @@ export default {
     const ownerJid = numberToJid(config.ownerNumber);
     await ctx.sock.sendMessage(ctx.chatId, {
       contacts: {
-        displayName: `${config.botName} — Owner`,
+        displayName: `${SAFE_BRAND} - Owner`,
         contacts: [
           {
             vcard:
-              `BEGIN:VCARD\nVERSION:3.0\nFN:${config.botName} Owner\n` +
+              `BEGIN:VCARD\nVERSION:3.0\nFN:${SAFE_BRAND} Owner\n` +
               `TEL;type=CELL;type=VOICE;waid=${config.ownerNumber}:+${config.ownerNumber}\nEND:VCARD`,
           },
         ],
