@@ -71,6 +71,9 @@ export const config = {
 };
 
 export function isOwner(jid = '') {
+  if (!config.ownerNumber || !jid) return false;
+
   const digits = String(jid).replace(/\D/g, '');
-  return !!config.ownerNumber && digits.startsWith(config.ownerNumber);
+
+  return digits === config.ownerNumber;
 }
