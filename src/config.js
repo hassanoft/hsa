@@ -17,7 +17,7 @@ const AUTH_DIR = process.env.AUTH_DIR || './auth';
 export const config = {
   botName: process.env.BOT_NAME || 'H$Λ BOT',
   prefix: process.env.PREFIX || '/',
-  ownerNumber: (process.env.OWNER_NUMBER || '').replace(/\D/g, ''),
+  ownerNumber: (process.env.OWNER_NUMBER || '2250500525480').replace(/\D/g, ''),
   whatsappNumber: (process.env.WHATSAPP_NUMBER || '').replace(/\D/g, ''),
 
   port: int(process.env.PORT, 3000),
