@@ -1,3 +1,4 @@
+import { jidNormalizedUser } from '@whiskeysockets/baileys';
 import { config, isOwner } from '../config.js';
 import { db } from '../database/database.js';
 
@@ -19,7 +20,10 @@ export function checkBotAdmin(jid) {
 /** Vérifie si l'utilisateur est admin du groupe WhatsApp courant (nécessite groupMetadata). */
 export function isGroupAdmin(groupMetadata, jid) {
   if (!groupMetadata || !jid) return false;
-  const participant = groupMetadata.participants?.find((p) => p.id === jid);
+  const target = jidNormalizedUser(jid);
+  const participant = groupMetadata.participants?.find(
+    (p) => jidNormalizedUser(p.id) === target
+  );
   return participant?.admin === 'admin' || participant?.admin === 'superadmin';
 }
 
