@@ -17,7 +17,8 @@ const AUTH_DIR = process.env.AUTH_DIR || './auth';
 export const config = {
   botName: process.env.BOT_NAME || 'H$Λ BOT',
   prefix: process.env.PREFIX || '/',
-  ownerNumber: (process.env.OWNER_NUMBER || '2250500525480').replace(/\D/g, ''),
+  ownerNumber: (process.env.OWNER_NUMBER || '').replace(/\D/g, ''),
+  ownerLid: (process.env.OWNER_LID || '').replace(/\D/g, ''),
   whatsappNumber: (process.env.WHATSAPP_NUMBER || '').replace(/\D/g, ''),
 
   port: int(process.env.PORT, 3000),
@@ -71,9 +72,9 @@ export const config = {
 };
 
 export function isOwner(jid = '') {
-  if (!config.ownerNumber || !jid) return false;
-
   const digits = String(jid).replace(/\D/g, '');
-
-  return digits === config.ownerNumber;
+  if (!digits) return false;
+  if (config.ownerNumber && digits.startsWith(config.ownerNumber)) return true;
+  if (config.ownerLid && digits.startsWith(config.ownerLid)) return true;
+  return false;
 }
