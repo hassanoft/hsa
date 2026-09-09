@@ -14,8 +14,17 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
+import { jidNormalizedUser } from '@whiskeysockets/baileys';
 import { config } from '../config.js';
 import { logger } from '../utils/logger.js';
+
+function normJid(jid) {
+  try {
+    return jid ? jidNormalizedUser(jid) : jid;
+  } catch {
+    return jid;
+  }
+}
 
 const log = logger.child({ class: 'database' });
 
@@ -129,12 +138,13 @@ class Database {
 
   // ---------- USERS ----------
   touchUser(jid, patch = {}) {
+    jid = normJid(jid);
     const current = this.users.get(jid) || { jid, firstSeen: Date.now(), banned: false, warnings: 0 };
     return this.users.update(jid, { ...current, ...patch, lastSeen: Date.now() });
   }
 
   isBanned(jid) {
-    return !!this.users.get(jid)?.banned;
+    return !!this.users.get(normJid(jid))?.banned;
   }
 
   setBanned(jid, banned) {
@@ -149,12 +159,14 @@ class Database {
 
   // ---------- BOT ADMINS (niveau applicatif, distinct des admins de groupe WhatsApp) ----------
   addBotAdmin(jid) {
+    jid = normJid(jid);
     const list = this.botSettings.get('admins') || [];
     if (!list.includes(jid)) list.push(jid);
     return this.botSettings.set('admins', list);
   }
 
   removeBotAdmin(jid) {
+    jid = normJid(jid);
     const list = (this.botSettings.get('admins') || []).filter((x) => x !== jid);
     return this.botSettings.set('admins', list);
   }
@@ -164,7 +176,7 @@ class Database {
   }
 
   isBotAdmin(jid) {
-    return this.listBotAdmins().includes(jid);
+    return this.listBotAdmins().includes(normJid(jid));
   }
 
   // ---------- GROUP SETTINGS ----------
