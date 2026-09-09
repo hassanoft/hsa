@@ -9,11 +9,11 @@
 // AuthenticationState (creds + SignalKeyStore), calqué sur l'implémentation
 // officielle useMultiFileAuthState, mais avec le disque remplacé par db.js.
 
-import * as baileys from '@whiskeysockets/baileys';
+import baileys from '@whiskeysockets/baileys'; // Changement ici
 import { logger } from '../utils/logger.js';
 
 const log = logger.child({ class: 'authStore' });
-const { BufferJSON, initAuthCreds, proto } = baileys; // Vous récupérez vos variables ici
+const { BufferJSON, initAuthCreds, proto } = baileys; // Le reste fonctionne
 
 export async function useDatabaseAuthState(db) {
   const writeData = (key, data) => {
