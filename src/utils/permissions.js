@@ -21,9 +21,12 @@ export function checkBotAdmin(jid) {
 export function isGroupAdmin(groupMetadata, jid) {
   if (!groupMetadata || !jid) return false;
   const target = jidNormalizedUser(jid);
-  const participant = groupMetadata.participants?.find(
-    (p) => jidNormalizedUser(p.id) === target
-  );
+  const participant = groupMetadata.participants?.find((p) => {
+    if (jidNormalizedUser(p.id) === target) return true;
+    if (p.phoneNumber && jidNormalizedUser(p.phoneNumber) === target) return true;
+    if (p.lid && jidNormalizedUser(p.lid) === target) return true;
+    return false;
+  });
   return participant?.admin === 'admin' || participant?.admin === 'superadmin';
 }
 
