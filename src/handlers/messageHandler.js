@@ -55,6 +55,13 @@ export async function handleMessagesUpsert(sock, { messages, type }) {
   }
 }
 
+function resolveSenderJid(msg, isGroup) {
+  const raw = isGroup ? msg.key.participant : msg.key.remoteJid;
+  const alt = isGroup ? msg.key.participantPn : msg.key.senderPn;
+  const resolved = raw && raw.endsWith('@lid') && alt ? alt : raw;
+  return jidNormalizedUser(resolved);
+}
+
 async function handleSingleMessage(sock, msg) {
   if (!msg.message) return;
   if (msg.key.remoteJid === 'status@broadcast') return;
@@ -66,9 +73,7 @@ async function handleSingleMessage(sock, msg) {
   const isGroup = chatId.endsWith('@g.us');
   const botJid = jidNormalizedUser(sock.user.id);
 
-  const senderJid = msg.key.fromMe
-    ? botJid
-    : jidNormalizedUser(isGroup ? msg.key.participant : msg.key.remoteJid);
+  const senderJid = msg.key.fromMe ? botJid : resolveSenderJid(msg, isGroup);
 
   const text = extractText(msg.message).trim();
   const pushName = msg.pushName || senderJid.split('@')[0];
