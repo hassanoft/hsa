@@ -1,6 +1,6 @@
 {
   "name": "hsa-bot",
-  "version": "1.0.0",
+  "version": "2.1.6",
   "description": "H$\u039b BOT - Bot WhatsApp multifonction, gratuit et open, propulse par Baileys.",
   "type": "module",
   "main": "src/index.js",
