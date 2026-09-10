@@ -5,7 +5,7 @@
 // PostgreSQL : il suffira d'adapter database.js, ce fichier n'a pas à
 // changer). Activé via AUTH_STORAGE=database dans .env.
 //
-// Le format suit exactement le contrat attendu par Baileys pour un
+// Le format sit exactement le contrat attendu par Baileys pour un
 // AuthenticationState (creds + SignalKeyStore), calqué sur l'implémentation
 // officielle useMultiFileAuthState, mais avec le disque remplacé par db.js.
 
