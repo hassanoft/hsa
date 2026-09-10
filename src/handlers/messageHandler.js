@@ -5,6 +5,7 @@ import { getPrefix } from '../utils/prefixStore.js';
 import { checkOwner, checkBotAdmin, isGroupAdmin, isBotGroupAdmin } from '../utils/permissions.js';
 import { dispatchCommand } from './commandHandler.js';
 import { tryHandleContactFlow } from './contactHandler.js';
+import { tryHandleAgentFlow } from './agentHandler.js';
 import { runGroupModeration } from './moderationHandler.js';
 
 const log = logger.child({ class: 'messageHandler' });
@@ -121,6 +122,12 @@ async function handleSingleMessage(sock, msg) {
     }
   }
 
+  // --- AGENT-IA (priorité maximale) ---
+  // Doit être appelé AVANT le check du préfixe : l'agent peut répondre
+  // à un message sans préfixe, ou intercepter une réponse à son propre message.
+  const handledByAgent = await tryHandleAgentFlow(sock, ctx);
+  if (handledByAgent) return;
+
   // --- Système /contact (réponse OWNER ou contenu en attente) ---
   const handledByContact = await tryHandleContactFlow(sock, ctx);
   if (handledByContact) return;
@@ -132,7 +139,7 @@ async function handleSingleMessage(sock, msg) {
   }
 
   // --- Commandes (préfixe obligatoire) ---
-  if (!text || !text.startsWith(prefix)) return; // aucune réponse sans préfixe (section 6 / 39)
+  if (!text || !text.startsWith(prefix)) return; // aucune réponse sans préfixe
 
   const withoutPrefix = text.slice(prefix.length).trim();
   if (!withoutPrefix) return;
